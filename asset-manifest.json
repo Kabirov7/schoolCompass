@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/school_compass/static/css/main.6a9ef6af.chunk.css",
+    "main.js": "/school_compass/static/js/main.a518a89e.chunk.js",
+    "main.js.map": "/school_compass/static/js/main.a518a89e.chunk.js.map",
+    "runtime-main.js": "/school_compass/static/js/runtime-main.2ca91cbb.js",
+    "runtime-main.js.map": "/school_compass/static/js/runtime-main.2ca91cbb.js.map",
+    "static/js/2.6e4b512b.chunk.js": "/school_compass/static/js/2.6e4b512b.chunk.js",
+    "static/js/2.6e4b512b.chunk.js.map": "/school_compass/static/js/2.6e4b512b.chunk.js.map",
+    "static/js/3.bf7fceb2.chunk.js": "/school_compass/static/js/3.bf7fceb2.chunk.js",
+    "static/js/3.bf7fceb2.chunk.js.map": "/school_compass/static/js/3.bf7fceb2.chunk.js.map",
+    "index.html": "/school_compass/index.html",
+    "static/css/main.6a9ef6af.chunk.css.map": "/school_compass/static/css/main.6a9ef6af.chunk.css.map",
+    "static/js/2.6e4b512b.chunk.js.LICENSE.txt": "/school_compass/static/js/2.6e4b512b.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2ca91cbb.js",
+    "static/js/2.6e4b512b.chunk.js",
+    "static/css/main.6a9ef6af.chunk.css",
+    "static/js/main.a518a89e.chunk.js"
+  ]
+}
