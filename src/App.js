@@ -16,7 +16,7 @@ function App(){
 			<div>
 					<Router>
 						<div>
-							<Route exact path={"/school_compass/"} component={Home}/>
+							<Route exact path={"/schoolCompass/"} component={Home}/>
 							{/*<Route exact path={"/school_compass/myRes"} component={Result}/>*/}
 						</div>
 					</Router>
