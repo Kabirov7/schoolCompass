@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/school_compass/static/css/main.6a9ef6af.chunk.css",
-    "main.js": "/school_compass/static/js/main.a518a89e.chunk.js",
-    "main.js.map": "/school_compass/static/js/main.a518a89e.chunk.js.map",
-    "runtime-main.js": "/school_compass/static/js/runtime-main.2ca91cbb.js",
-    "runtime-main.js.map": "/school_compass/static/js/runtime-main.2ca91cbb.js.map",
-    "static/js/2.6e4b512b.chunk.js": "/school_compass/static/js/2.6e4b512b.chunk.js",
-    "static/js/2.6e4b512b.chunk.js.map": "/school_compass/static/js/2.6e4b512b.chunk.js.map",
-    "static/js/3.bf7fceb2.chunk.js": "/school_compass/static/js/3.bf7fceb2.chunk.js",
-    "static/js/3.bf7fceb2.chunk.js.map": "/school_compass/static/js/3.bf7fceb2.chunk.js.map",
-    "index.html": "/school_compass/index.html",
-    "static/css/main.6a9ef6af.chunk.css.map": "/school_compass/static/css/main.6a9ef6af.chunk.css.map",
-    "static/js/2.6e4b512b.chunk.js.LICENSE.txt": "/school_compass/static/js/2.6e4b512b.chunk.js.LICENSE.txt"
+    "main.css": "/schoolCompass/static/css/main.6a9ef6af.chunk.css",
+    "main.js": "/schoolCompass/static/js/main.1b3e493c.chunk.js",
+    "main.js.map": "/schoolCompass/static/js/main.1b3e493c.chunk.js.map",
+    "runtime-main.js": "/schoolCompass/static/js/runtime-main.27033764.js",
+    "runtime-main.js.map": "/schoolCompass/static/js/runtime-main.27033764.js.map",
+    "static/js/2.00f5f3d4.chunk.js": "/schoolCompass/static/js/2.00f5f3d4.chunk.js",
+    "static/js/2.00f5f3d4.chunk.js.map": "/schoolCompass/static/js/2.00f5f3d4.chunk.js.map",
+    "static/js/3.bf7fceb2.chunk.js": "/schoolCompass/static/js/3.bf7fceb2.chunk.js",
+    "static/js/3.bf7fceb2.chunk.js.map": "/schoolCompass/static/js/3.bf7fceb2.chunk.js.map",
+    "index.html": "/schoolCompass/index.html",
+    "static/css/main.6a9ef6af.chunk.css.map": "/schoolCompass/static/css/main.6a9ef6af.chunk.css.map",
+    "static/js/2.00f5f3d4.chunk.js.LICENSE.txt": "/schoolCompass/static/js/2.00f5f3d4.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.2ca91cbb.js",
-    "static/js/2.6e4b512b.chunk.js",
+    "static/js/runtime-main.27033764.js",
+    "static/js/2.00f5f3d4.chunk.js",
     "static/css/main.6a9ef6af.chunk.css",
-    "static/js/main.a518a89e.chunk.js"
+    "static/js/main.1b3e493c.chunk.js"
   ]
 }
