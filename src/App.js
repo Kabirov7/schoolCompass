@@ -1,4 +1,4 @@
-import React, {useEffect, Component} from 'react';
+import React, {BrowserRouter, useEffect, Component, useContext} from 'react';
 import './App.css';
 
 import {
@@ -6,22 +6,28 @@ import {
 	Route,
 } from "react-router-dom";
 
-import Home from "./Components/auth/Home";
-import Result from "./Components/auth/Result";
+import Home from "./Components/MainPages/Home";
 import ReactGa from "react-ga"
+import {AuthContext, AuthProvider} from "./util/Auth";
+import firebase  from "./util/firebase";
+import LogIn from "./Components/Auth/LogIn"
+import PrivateRoute from "./Components/Auth/PrivateRoute";
+import {Button} from "@material-ui/core";
+import app from "./util/firebase"
 
-function App(){
+function App() {
 
-		return (
-			<div>
-					<Router>
-						<div>
-							<Route exact path={"/schoolCompass/"} component={Home}/>
-							{/*<Route exact path={"/school_compass/myRes"} component={Result}/>*/}
-						</div>
-					</Router>
-			</div>
-		)
+	return (
+		<AuthProvider>
+			<Router>
+				<div>
+					<PrivateRoute exreact path={"/schoolCompass/"} component={Home}/>
+					<Route exact path={"/login"} component={LogIn}/>
+				</div>
+			</Router>
+			{/*<Button onClick={() => firebase.auth().signOut()}>выйти</Button>*/}
+		</AuthProvider>
+	)
 
 }
 

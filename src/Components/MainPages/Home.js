@@ -1,31 +1,38 @@
 import React, {Component, useEffect, useState} from "react";
 import '../../App.css'
+import RadioButton from "../form/radiobutton";
 import CheckBox from "../form/checkBox";
+import SelectBox from "../form/SelectBox";
 import Scatter from "../Charts/Scatter";
 import firebase from "../../util/firebase";
-import FacebookShareBtn from "../shareBtn/facebookShare";
 import ScatterLine from "../axisAverrage/ScatterLineResult";
-import BasicTextFields from "../form/TextField";
+import PrecentOfAnswered from "../axisAverrage/PrecentOfAnswered";
+import app from "../../util/firebase";
+import {Button} from "@material-ui/core";
+import {AuthProvider} from "../../util/Auth";
+
 
 let distance = require('euclidean-distance')
 
 
 const queryString = require('query-string')
 
-class Result extends Component {
+class Home extends Component {
 	state = {
 		questions: [],
 		main_title: '',
 		gateway: '',
-		answers: [],
+		answers: {},
 		notAnswered: [],
 		axises: {},
 		axis_points: [],
 		total_axis: [],
 		axis_title_values: [],
+		axis_values: [],
 		position: {},
 		axis: [],
 		axis_title: [],
+		axises_object: [],
 		axis_names: {},
 		all_axis: {},
 		answer_title_values: [],
@@ -38,23 +45,28 @@ class Result extends Component {
 		batch_axises: [],
 		onlyTwoCheckBox: true,
 		showAnswers: false,
+		questions_on_page: 0,
+		first_questions: 0,
 		partyColor: [],
 		anket: false,
 		anket_all_answers: 1,
+		anketa_questions: [],
 		anket_answers: [],
 		axis_legends: [],
 		legendary: [],
-		nearestParty: {},
+		nearestTeacher: {},
 		compass_url: "",
+		saveData: false,
 		axisNearest: [],
-		userUid: '',
-		trueUid: false
-
+		currentUser: {},
+		saved: false
 	}
 
 
 	componentDidMount() {
 		this.downloadData()
+
+		this.setState({currentUser: firebase.auth().currentUser})
 	}
 
 	downloadData = () => {
@@ -72,16 +84,21 @@ class Result extends Component {
 				.then((data) => {
 					console.log("DATA", data);
 					this.setState({
+						questions: data.questions,
 						main_title: data.main_title,
 						gateway: data.gateway,
 						compass_compare: data.compass_compare,
 						axis: data.axises,
 						axis_title: data.axis_title,
 						axis_title_values: data.axis_title_values,
+						axis_values: data.axis_values,
 						answer_title_values: data.answer_title_values,
 						answer_values_males: data.answer_values,
+						axises_object: data.axises_object,
+						questions_on_page: data.questions_on_page,
 						axis_points: data.axis_points,
 						partyColor: data.partyColor,
+						anketa_questions: data.anket,
 						axis_legends: data.axis_legends,
 						compass_url: data.compass_url,
 						axisNearest: data.axisNearest,
@@ -92,23 +109,41 @@ class Result extends Component {
 		}
 	}
 
-	returnAnswer = (answer, index) => {
-		this.setState({userUid: answer})
+	getNotAnswered = (state, pl) => {
+
+		function elToIntArr(array) {
+			array.forEach((i, index) => {
+				array[index] = Number(array[index])
+			})
+			return array
+		}
+
+		let currentQset;
+		if (pl == "plus") {
+			currentQset = this.state.questions.slice(this.state.first_questions, this.state.first_questions + this.state.questions_on_page);
+		} else if (pl == 'minus') {
+			currentQset = this.state.questions.slice(this.state.first_questions, this.state.first_questions - this.state.questions_on_page);
+		}
+
+
+		let idxsOfAnswered = elToIntArr(Object.keys(state.answers))
+		currentQset = elToIntArr(Object.keys(currentQset))
+
+		let whichNotAnswered = currentQset.filter((i) => idxsOfAnswered.indexOf(this.state.first_questions + i) == -1);
+
+		return whichNotAnswered
 	}
 
-	get_data = (state) => {
-		const uid = state.userUid
-		const answers = []
-		let db = firebase.firestore()
-		let rootRef = db.collection('users_answers')
-		rootRef.doc(uid).collection('answers').get()
-    .then(function(querySnapshot) {
-        querySnapshot.forEach(function(doc) {
-            answers.push(doc.data())
-        });
-        console.log(answers)
-    })
-		this.setState({answers:answers})
+	returnAnswer = (answer, index) => {
+		let answers = {...this.state.answers}
+		answers[index] = answer
+		this.setState({answers: answers})
+	}
+
+	returnAnketsAnswer = (answer, index) => {
+		let answers = {...this.state.anket_answers}
+		answers[index] = answer
+		this.setState({anket_answers: answers})
 	}
 
 	returnAxisName = (axis_name, index) => {
@@ -125,7 +160,7 @@ class Result extends Component {
 		return mainTemplate;
 	}
 
-		getAxisTemplate = (state) => {
+	getAxisTemplate = (state) => {
 		let axis_names = [];
 		let axis, axis_index, axis_object;
 		let all_axis;
@@ -150,7 +185,13 @@ class Result extends Component {
 		this.setState({all_axis: all_axis})
 	}
 
-		getAxis = (state) => {
+	returnAxis = (axis) => {
+		let axises = {...this.state.axises}
+		axises = axis
+		this.setState({axises: axises})
+	}
+
+	getAxis = (state) => {
 		let state_answers = Object.entries(state.answers);
 
 		let axises_names = [];
@@ -187,7 +228,7 @@ class Result extends Component {
 		this.getAxisAverage(axs, axis_count);
 	};
 
-		getAxisAverage = (axs, axis_count) => {
+	getAxisAverage = (axs, axis_count) => {
 		const sum = this.getAxisTemplate(this.state)
 		const mainTemplate = this.getAxisMainTemplate(this.state)
 
@@ -222,7 +263,7 @@ class Result extends Component {
 		}
 	}
 
-		distanceEuclid = (axises_object) => {
+	distanceEuclid = (axises_object) => {
 		let distanceIs;
 		let minDistance = Infinity;
 		let axises = [];
@@ -278,7 +319,7 @@ class Result extends Component {
 		}
 	}
 
-			legendByAxis = () => {
+	legendByAxis = () => {
 		let legendsByAxis = []
 		let legendIs = this.state.axis_legends.map((el, i) => {
 			let itIs;
@@ -322,18 +363,72 @@ class Result extends Component {
 		return legendIs
 	}
 
+	saving_data = (state) => {
+		firebase.firestore().collection("users").doc(this.state.currentUser.uid)
+			.set({
+				mail: state.currentUser.email,
+				gender: state.anket_answers[0],
+				grade: state.anket_answers[1],
+				answers: this.state.all_axis_averrage,
+			}).then(console.log('save'))
+	}
+
 
 	render() {
 
+		let anket = this.state.anketa_questions.map((el, i) => {
+			return <SelectBox key={i} index={i} title={el.title} answers={el.answer}
+												returnAnketsAnswer={this.returnAnketsAnswer}/>
+		})
+
+		let doneAnket = () => {
+			if (Object.keys(this.state.anket_answers).length == this.state.anketa_questions.length) {
+				topFunction();
+				this.setState({
+					anket_all_answers: true,
+					anket: true
+				})
+			} else {
+				this.setState({anket_all_answers: false})
+			}
+
+		}
+
+		let qSet = this.state.questions.slice(this.state.first_questions, this.state.first_questions + this.state.questions_on_page)
+		let questionList = qSet.map((el, i) => {
+			let message;
+			if (el.type === 'select') {
+				if (this.state.notAnswered.indexOf(i) != -1) {
+					message = 'Вам следует ответить на этот вопрос'
+				} else {
+					message = ''
+				}
+
+				let type_answers = el.answer;
+				let title_values = this.state.answer_title_values;
+				let index_type = title_values.indexOf(type_answers);
+				let answer = this.state.answer_values_males[index_type][this.state.anket_answers[0]]
+				return (
+					<RadioButton ans={this.state.answers[this.state.first_questions + i]}
+											 key={this.state.first_questions + i} id={i} index={this.state.first_questions + i}
+											 title={el.title}
+											 message={message} answers={answer} returnAnswer={this.returnAnswer}/>
+				)
+			}
+		})
+
 		let axisAverrage = this.state.axis_title.map((el, i) => {
+			if ((Object.values(this.state.answers).length == Object.values(this.state.questions).length) && (Object.values(this.state.answers).length != Object.values({}).length) && (this.state.all_axis_averrage != [])) {
+				this.saving_data(this.state)
+			}
 			return (<ScatterLine index={i}
-			                     axisName={el}
-			                     names={this.state.compass_compare.position}
-			                     partyAxises={this.state.compass_compare.axises}
-			                     partyColor={this.state.partyColor}
-			                     axisNearest={this.state.axisNearest[i]}
-			                     axisAverrage={this.state.all_axis_averrage[i]}
-			                     axisPoints={this.state.axis_points[i]}
+													 axisName={el}
+													 names={this.state.compass_compare.position}
+													 partyAxises={this.state.compass_compare.axises}
+													 partyColor={this.state.partyColor}
+													 axisNearest={this.state.axisNearest[i]}
+													 axisAverrage={this.state.all_axis_averrage[i]}
+													 axisPoints={this.state.axis_points[i]}
 				/>
 			)
 		})
@@ -342,7 +437,6 @@ class Result extends Component {
 			return (
 				<CheckBox key={i} index={i} name={el} title={this.state.axis_title[i]} returnAxisName={this.returnAxisName}/>
 			)
-
 		})
 
 		let chart = () => {
@@ -358,8 +452,8 @@ class Result extends Component {
 					<div>
 						<div>
 							<Scatter partyColor={this.state.partyColor} myAxis={this.state.total_axis}
-							         names={this.state.compass_compare.position}
-							         axises={this.state.batch_axises}/>
+											 names={this.state.compass_compare.position}
+											 axises={this.state.batch_axises}/>
 						</div>
 						<p className={'scatter'}>Ось X — {this.state.axis_title[Object.keys(axisesNames)[0]]}</p>
 						<p className={'scatter'}>Ось Y — {this.state.axis_title[Object.keys(axisesNames)[1]]}</p>
@@ -370,7 +464,7 @@ class Result extends Component {
 			}
 		}
 
-		let resultParty = () => {
+		let resultTeacher = () => {
 			let distanceIs;
 			let names = this.state.compass_compare.position
 			let minIs = {
@@ -386,38 +480,61 @@ class Result extends Component {
 					minIs.distance = distanceIs
 				}
 			})
-			if (Object.values(this.state.nearestParty).length == Object.values({}).length) {
-				this.setState({nearestParty: minIs})
+			if (Object.values(this.state.nearestTeacher).length == Object.values({}).length) {
+				this.setState({nearestTeacher: minIs})
 			}
 			return (<div>
-				<div className={"resultParty"}>
+				<div className={"resultTeacher"}>
 					<h3>Ближайший вам учитель:</h3>
 					<h3>«{minIs.name}»</h3>
 				</div>
 
-				<div className={"resultParty"}>
+				<div className={"resultTeacher"}>
 					<h3>Ваш автопортрет на основе ответов:</h3>
 					<div className={"myLegends"}>
 						{this.legendByAxis()}
 					</div>
 				</div>
 
-				<div className={"facebookBtn"}>
-					<h4 style={{textAlign: "center"}}>Поделиться результатами в социальных сетях</h4>
-					<FacebookShareBtn
-						className={'fb'}
-						legends={this.state.axis_legends}
-						indexLegends={this.state.legendary}
-						compass_url={this.state.compass_url}
-						nearestParty={this.state.nearestParty.name}
-					/>
-				</div>
+
 			</div>)
 		}
 
 		let topFunction = () => {
 			document.body.scrollTop = 0;
 			document.documentElement.scrollTop = 0;
+		}
+
+		let nextAndScrollTop = () => {
+			let whichNotAnswered = this.getNotAnswered(this.state, "plus");
+			if (whichNotAnswered.length == 0) {
+				this.getAxis(this.state)
+				this.setState({first_questions: this.state.first_questions + this.state.questions_on_page});
+				this.setState({notAnswered: []})
+				topFunction();
+			} else {
+				this.setState({notAnswered: whichNotAnswered})
+				const el = document.getElementById(`${whichNotAnswered[0]}`)
+				el.scrollIntoView({
+					behavior: "smooth",
+					block: "start"
+				})
+			}
+
+
+		}
+
+		let previousAndScrollTop = () => {
+			let whichNotAnswered = this.getNotAnswered(this.state, "minus");
+
+			if (whichNotAnswered.length == 0) {
+				this.getAxis(this.state)
+				this.setState({first_questions: this.state.first_questions - this.state.questions_on_page});
+				this.setState({notAnswered: []})
+				topFunction();
+			} else {
+				this.setState({notAnswered: whichNotAnswered})
+			}
 		}
 
 		let onlyTwoCheckbox = () => {
@@ -431,48 +548,58 @@ class Result extends Component {
 			}
 		}
 
-		const showResultPage = () => {
-			this.get_data(this.state)
-			this.setState({trueUid: true})
-		}
-
 		const forms = () => {
-			if (this.state.trueUid == false) {
+			if (this.state.anket == false) {
+				let answers = (this.state.anket_all_answers == false) ? "Вам следует ответить на все вопросы" : ""
 				return (
 					<div style={{textAlign: "center"}}>
-						<BasicTextFields title={"Введите ваш ID для просмотра результатов"} returnAnswer={this.returnAnswer}/>
-						<button onClick={() => showResultPage()}>Show result</button>
+						<p className={"chooseAnswer padding_margin"}>{answers}</p>
+						{anket}
+						<div className={"buttons"}>
+							<button onClick={() => doneAnket()}>Начать</button>
+							<button onClick={() => app.auth().signOut()}>Выйти</button>
+						</div>
 					</div>
 				)
-			} else if (this.state.trueUid == true) {
-
+			} else if (this.state.questions.length <= this.state.first_questions && this.state.anket == true) {
 				let result = this.state.onlyTwoCheckBox ? "" : "Выберите только две темы";
-				let d = (this.state.compass_compare.axises != undefined) ? resultParty() : "";
+				let d = (this.state.compass_compare.axises != undefined) ? resultTeacher() : "";
 				return (<div>
 					{d}
 					<h2 className="content-center full-result">Развёрнутые результаты:</h2>
 					{axisAverrage}
-					{/*<h1 className="content-center moreResult">Поиграйтесь с результатами! Выведите их на график!</h1>*/}
-					{/*<h2 className="content-center choose3axis">Выберите два явления, которые вы хотите отобразить:</h2>*/}
-					{/*<p className="chooseAnswer padding_margin">{result}</p>*/}
-					{/*<div className="choose_axises">*/}
-					{/*	{checkbox}*/}
-					{/*</div>*/}
-					{/*<div style={{textAlign: "center"}}>*/}
-					{/*	<button onClick={() => onlyTwoCheckbox()}>Показать результаты</button>*/}
-					{/*</div>*/}
-					{/*{chart()}*/}
-					{/*<div className={'result-position'}>*/}
-					{/*	<h3>Ближайший вам учитель по выбранным осям:</h3>*/}
-					{/*	<h2>{this.state.position.title}</h2>*/}
-					{/*</div>*/}
+					<h1 className="content-center moreResult">Поиграйтесь с результатами! Выведите их на график!</h1>
+					<h2 className="content-center choose3axis">Выберите два явления, которые вы хотите отобразить:</h2>
+					<p className="chooseAnswer padding_margin">{result}</p>
+					<div className="choose_axises">
+						{checkbox}
+					</div>
+					<div style={{textAlign: "center"}}>
+						<button onClick={() => onlyTwoCheckbox()}>Показать результаты</button>
+					</div>
+					{chart()}
+					<div className={'result-position'}>
+						<h3>Ближайший вам учитель по выбранным осям:</h3>
+						<h2>{this.state.position.title}</h2>
+					</div>
+				</div>)
+			} else {
+				let previousPageShowing = (this.state.first_questions == 0) ?
+					<button style={{display: "none"}}>Предыдущая страница</button> :
+					<button onClick={previousAndScrollTop}>Предыдущая страница</button>
+				return (<div>
+					<PrecentOfAnswered lenQuestions={this.state.questions.length} currentQuestions={this.state.first_questions}/>
+					{questionList}
+					<div className="pagination">
+						{previousPageShowing}
+						<button onClick={nextAndScrollTop}>Следующая страница</button>
+					</div>
 				</div>)
 			}
 		}
 
 		return (
 			<div className="App">
-				<button onClick={() => console.log(this.state)}></button>
 				{forms()}
 			</div>
 		);
@@ -480,4 +607,4 @@ class Result extends Component {
 }
 
 
-export default Result;
+export default Home;
