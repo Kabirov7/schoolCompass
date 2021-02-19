@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/schoolCompass/static/css/main.b07503d5.chunk.css",
-    "main.js": "/schoolCompass/static/js/main.5729d088.chunk.js",
-    "main.js.map": "/schoolCompass/static/js/main.5729d088.chunk.js.map",
-    "runtime-main.js": "/schoolCompass/static/js/runtime-main.5e891fd5.js",
-    "runtime-main.js.map": "/schoolCompass/static/js/runtime-main.5e891fd5.js.map",
-    "static/js/2.906eb390.chunk.js": "/schoolCompass/static/js/2.906eb390.chunk.js",
-    "static/js/2.906eb390.chunk.js.map": "/schoolCompass/static/js/2.906eb390.chunk.js.map",
-    "static/js/3.f70bd1c9.chunk.js": "/schoolCompass/static/js/3.f70bd1c9.chunk.js",
-    "static/js/3.f70bd1c9.chunk.js.map": "/schoolCompass/static/js/3.f70bd1c9.chunk.js.map",
+    "main.js": "/schoolCompass/static/js/main.d0a590e6.chunk.js",
+    "main.js.map": "/schoolCompass/static/js/main.d0a590e6.chunk.js.map",
+    "runtime-main.js": "/schoolCompass/static/js/runtime-main.fc791653.js",
+    "runtime-main.js.map": "/schoolCompass/static/js/runtime-main.fc791653.js.map",
+    "static/js/2.f6aaea72.chunk.js": "/schoolCompass/static/js/2.f6aaea72.chunk.js",
+    "static/js/2.f6aaea72.chunk.js.map": "/schoolCompass/static/js/2.f6aaea72.chunk.js.map",
+    "static/js/3.58e982c2.chunk.js": "/schoolCompass/static/js/3.58e982c2.chunk.js",
+    "static/js/3.58e982c2.chunk.js.map": "/schoolCompass/static/js/3.58e982c2.chunk.js.map",
     "index.html": "/schoolCompass/index.html",
     "static/css/main.b07503d5.chunk.css.map": "/schoolCompass/static/css/main.b07503d5.chunk.css.map",
-    "static/js/2.906eb390.chunk.js.LICENSE.txt": "/schoolCompass/static/js/2.906eb390.chunk.js.LICENSE.txt"
+    "static/js/2.f6aaea72.chunk.js.LICENSE.txt": "/schoolCompass/static/js/2.f6aaea72.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.5e891fd5.js",
-    "static/js/2.906eb390.chunk.js",
+    "static/js/runtime-main.fc791653.js",
+    "static/js/2.f6aaea72.chunk.js",
     "static/css/main.b07503d5.chunk.css",
-    "static/js/main.5729d088.chunk.js"
+    "static/js/main.d0a590e6.chunk.js"
   ]
 }
